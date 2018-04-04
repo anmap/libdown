@@ -12,6 +12,10 @@
     "libdown": "./index.js"
   },
   "dependencies": {
-    "commander": "^2.15.1"
+    "chalk": "^2.3.2",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.15.1",
+    "progress": "^2.0.0"
   }
 }
