@@ -1,0 +1,11 @@
+{
+  "name": "libdown",
+  "version": "0.0.1",
+  "description": "A Node.js command line tool to download digitalized documents from libraries",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anmap",
+  "license": "MIT"
+}
