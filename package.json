@@ -10,5 +10,8 @@
   "license": "MIT",
   "bin": {
     "libdown": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^2.15.1"
   }
 }
