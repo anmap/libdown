@@ -1,17 +1,30 @@
 class Document {
-  constructor() {
+  constructor(
+    libraryCode,
+    id,
+    title,
+    author,
+    pages,
+    year,
+    type,
+    libInfo,
+    copyright,
+    downloadPage,
+  ) {
     this.libraryCode = libraryCode;
-    this.libid = id;
+    this.id = id;
     this.title = title;
     this.author = author;
+    this.pages = pages;
     this.year = year;
+    this.type = type;
     this.libInfo = libInfo;
     this.copyright = copyright;
-    this.downloadMethod = downloadMethod;
+    this.downloadPage = downloadPage;
   }
 
   outputInfo() {
-
+    console.log(this.title);
   }
 
   getDocument() {
@@ -19,7 +32,7 @@ class Document {
   }
 
   getPage(page) {
-
+    this.downloadPage(this.id, page);
   }
 
   getPageRange(startPage, endPage) {

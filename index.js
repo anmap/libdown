@@ -21,7 +21,10 @@ libdown
       const sequence = sequences[identifedLibrary.sequence];
       console.log('Getting information...');
       sequence.getInfoSequence(url)
-        .then(info => console.log(info))
+        .then(document => {
+          document.outputInfo();
+          document.getPage(56);
+        })
         .catch(err => console.log(chalk.red(err)));
     } else {
       console.log('No supported library identified with this URL!')
