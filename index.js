@@ -14,7 +14,7 @@ libdown
     if (identifedLibrary) {
       console.log(identifedLibrary.libraryName);
     } else {
-      console.log('No library identified with this URL!')
+      console.log('No supported library identified with this URL!')
     }
   })
   .parse(process.argv);

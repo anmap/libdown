@@ -4,7 +4,7 @@ const { extractHostname } = require('./utils');
 
 function identifyLibraryFromURL(url) {
   // Get list of libraries
-  const librariesBuffer = fs.readFileSync('./libraries/libraries.txt');
+  const librariesBuffer = fs.readFileSync(`${__dirname}/libraries/libraries.txt`);
   const librariesTextArray = librariesBuffer.toString('UTF-8').split('\n');
   const libraries = {};
   librariesTextArray.forEach(libraryText => {
