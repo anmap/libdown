@@ -17,6 +17,11 @@ function extractHostname(url) {
   return hostname;
 }
 
+function getImageName(page) {
+  return 'page__' + ('0000' + page).substr(-4) + '.jpg';
+}
+
 module.exports = {
   extractHostname,
+  getImageName,
 };

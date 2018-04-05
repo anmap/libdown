@@ -10,6 +10,8 @@ const path = require('path');
 
 const Document = require('./../models/Document');
 
+const { getImageName } = require('./../utils');
+
 const LIBRARY_CODE = 'BnF';
 const PAGE_URL = 'http://gallica.bnf.fr/iiif/ark:/%s/f%s/full/full/0/native.jpg';
 
@@ -55,7 +57,7 @@ function getPageSequence(id, page) {
 
         // Output to file
         fs.writeFile(
-          path.resolve('page__' + ('0000' + page).substr(-4)) + '.jpg',
+          path.resolve('page__' + ('0000' + page).substr(-4) + '.jpg'),
           res.body,
           'binary',
           (err) => {
