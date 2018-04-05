@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 const libdown = require('commander');
+const chalk = require('chalk');
 
 // Import the identifying method
 const { identifyLibraryFromURL } = require('./identifier');
+
+// Import sequences
+const sequences = require('./sequences/index');
 
 libdown
   .arguments('<url>')
@@ -12,7 +16,13 @@ libdown
   .action(function(url) {
     const identifedLibrary = identifyLibraryFromURL(url);
     if (identifedLibrary) {
-      console.log(identifedLibrary.libraryName);
+      // Output library name
+      console.log(chalk.bold.yellow(identifedLibrary.libraryName.toUpperCase()));
+      const sequence = sequences[identifedLibrary.sequence];
+      console.log('Getting information...');
+      sequence.getInfoSequence(url)
+        .then(info => console.log(info))
+        .catch(err => console.log(chalk.red(err)));
     } else {
       console.log('No supported library identified with this URL!')
     }
