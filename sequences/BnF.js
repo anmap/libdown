@@ -5,17 +5,14 @@
 
 const request = require('superagent');
 const util = require('util');
-const fs = require('fs');
-const path = require('path');
 
 const Document = require('./../models/Document');
-
-const { getImageName } = require('./../utils');
 
 const LIBRARY_CODE = 'BnF';
 const PAGE_URL = 'http://gallica.bnf.fr/iiif/ark:/%s/f%s/full/full/0/native.jpg';
 
 function getInfoSequence(url) {
+  const documentId = url.substr(url.indexOf('ark:/') + 5, 19);
   return new Promise((resolve, reject) => {
     request
       .get(url)
@@ -25,17 +22,18 @@ function getInfoSequence(url) {
           return reject(new Error(err.response.error));
         }
         const body = res.body;
+        const pages = decodeURIComponent(body.ViewerFragment.contenu.PaginationViewerModel.parameters.nbTotalVues);
         const document = new Document (
           LIBRARY_CODE,
-          url.substr(url.indexOf('ark:/') + 5, 19),
+          documentId,
           decodeURIComponent(body.XitiFragment.parameters.x2),
           decodeURIComponent(body.XitiFragment.parameters.x3),
-          decodeURIComponent(body.ViewerFragment.contenu.PaginationViewerModel.parameters.nbTotalVues),
+          pages,
           decodeURIComponent(body.XitiFragment.parameters.x12),
           decodeURIComponent(body.XitiFragment.parameters.x4),
           decodeURIComponent(body.XitiFragment.parameters.x5),
           decodeURIComponent(body.XitiFragment.parameters.x9),
-          getPageSequence,
+          generatePageURLs(documentId, pages),
         );
 
         resolve(document);
@@ -43,33 +41,12 @@ function getInfoSequence(url) {
   });
 }
 
-function getPageSequence(id, page) {
-  const url = util.format(PAGE_URL, id, page);
-  return new Promise((resolve, reject) => {
-    request
-      .get(url)
-      .set('Content-Type', 'blob')
-      .end((err, res) => {
-        // Reject promise if error
-        if (err) {
-          return reject(new Error(err.response.error));
-        }
-
-        // Output to file
-        fs.writeFile(
-          path.resolve(getImageName(page)),
-          res.body,
-          'binary',
-          (err) => {
-            if (err) {
-              reject(new Error(err));
-            } else {
-              resolve();
-            }
-          }
-        )
-      });
-  });
+function generatePageURLs(documentId, pages) {
+  const pageURLs = [];
+  for (let i = 0; i < pages; i++) {
+    pageURLs.push(util.format(PAGE_URL, documentId, i + 1));
+  }
+  return pageURLs;
 }
 
 module.exports = {

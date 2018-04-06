@@ -6,7 +6,7 @@ const chalk = require('chalk');
 const { identifyLibraryFromURL } = require('./identifier');
 
 // Import utils
-const { showDisclaimer } =require('./utils');
+const { showDisclaimer } = require('./utils');
 
 // Import sequences
 const sequences = require('./sequences/index');
@@ -26,7 +26,7 @@ libdown
         .then(document => {
           document.outputInfo();
           showDisclaimer();
-          document.getPage(526);
+          document.getPage(526).then(() => console.log(chalk.green('Done!')));
         })
         .catch(err => console.log(chalk.red(err)));
     } else {
