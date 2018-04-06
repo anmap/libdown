@@ -1,3 +1,14 @@
+const chalk = require('chalk');
+
+function showDisclaimer() {
+  console.log('---------------------');
+  console.log(
+    chalk.bold.yellow('DISCLAIMER!'),
+    chalk.bold('Libdown only assists you in downloading materials that are made available to the public for PRIVATE USE ONLY. Libdown does not hold any liabilities regarding the distribution of the downloaded materials, whether commercial or not. Please consult copyright laws carefully before distributing the materials.')
+  );
+  console.log('---------------------');
+}
+
 function extractHostname(url) {
   let hostname;
   // Find & remove protocol (http, ftp, etc.) and get hostname
@@ -22,6 +33,7 @@ function getImageName(page) {
 }
 
 module.exports = {
+  showDisclaimer,
   extractHostname,
   getImageName,
 };
