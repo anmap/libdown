@@ -57,7 +57,7 @@ function getPageSequence(id, page) {
 
         // Output to file
         fs.writeFile(
-          path.resolve('page__' + ('0000' + page).substr(-4) + '.jpg'),
+          path.resolve(getImageName(page)),
           res.body,
           'binary',
           (err) => {
