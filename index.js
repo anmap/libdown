@@ -26,7 +26,9 @@ libdown
         .then(document => {
           document.outputInfo();
           showDisclaimer();
-          document.getPage(526).then(() => console.log(chalk.green('Done!')));
+          document.getPageRange(50,70)
+            .start()
+            .then(() => console.log(chalk.green('Operation done!')));
         })
         .catch(err => console.log(chalk.red(err)));
     } else {
