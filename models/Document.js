@@ -6,7 +6,7 @@ const PromisePool = require('es6-promise-pool');
 
 const { getImageName } = require('./../utils');
 
-const MAX_CONCURRENCY = 10;
+const MAX_CONCURRENCY = 8;
 
 class Document {
   constructor(
@@ -97,7 +97,14 @@ class Document {
   }
 
   getSpecificPages(pages) {
-
+    const self = this;
+    const arrLength = pages.length;
+    function* getPromises() {
+      for (let i = 0; i < arrLength; i++) {
+        yield self.getPage(pages[i]);
+      }
+    }
+    return new PromisePool(getPromises(), MAX_CONCURRENCY);
   }
 }
 
