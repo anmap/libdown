@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 const PromisePool = require('es6-promise-pool');
+const PDFDocument = require ('pdfkit');
+const sizeOf = require('image-size');
+const ProgressBar = require('progress');
 
 const { getImageName } = require('./../utils');
 
@@ -31,6 +34,12 @@ class Document {
     this.libInfo = libInfo;
     this.copyright = copyright;
     this.pageURLs = pageURLs;
+    
+    // For settings
+    // 1 - PDF Only
+    // 2 - Both PDF and images
+    // 3 - Images only
+    this.mode = 1;
   }
 
   outputInfo() {
@@ -83,12 +92,24 @@ class Document {
   }
 
   getPageRange(startPage, endPage) {
+    console.log(chalk.bold.blue(`Getting document from page ${startPage} to page ${endPage}`));
+    console.log(chalk.blue('Downloading, please wait...'));
+
     const self = this;
+    const counter = 0;
+
+    const barOpts = {
+      width: 40,
+      total: endPage - startPage,
+      clear: true,
+    };
+
     function* getPromises() {
       for (let i = startPage; i <= endPage; i++) {
         yield self.getPage(i);
       }
     }
+
     return new PromisePool(getPromises(), MAX_CONCURRENCY);
   }
 
@@ -96,6 +117,7 @@ class Document {
     return this.getPageRange(1, this.pages);
   }
 
+  // Not in use now
   getSpecificPages(pages) {
     const self = this;
     const arrLength = pages.length;
@@ -105,6 +127,47 @@ class Document {
       }
     }
     return new PromisePool(getPromises(), MAX_CONCURRENCY);
+  }
+
+  generatePDF(options) {
+    try {
+      const fileName = this.title.split('.')[0] + '.pdf';
+      console.log(chalk.bold.blue('Output PDF file: ' + fileName));
+      console.log(chalk.blue('Generating PDF, please wait...'));
+      
+
+      if (!options) {
+        options = {
+          pageStart: 1,
+          pageEnd: this.pages,
+        };
+      }
+
+      // Init PDF generation
+      const doc = new PDFDocument({
+        autoFirstPage: false,
+      });
+      doc.pipe(fs.createWriteStream(fileName));
+      
+      // If options is array, it's for selected pages
+      // Otherwise if it's an object, it's page range.
+      if (Array.isArray(options)) {
+        // To be implemented later
+      } else {  
+        for (let i = options.pageStart; i <= options.pageEnd; i++) {
+          const dimensions = sizeOf(getImageName(i));
+          doc.addPage({
+            size: [dimensions.width, dimensions.height],
+          });
+          doc.image(getImageName(i), 0, 0);
+        }
+      }
+      
+      doc.end();
+      console.log(chalk.green('Operation done!'));
+    } catch (error) {
+      
+    }
   }
 }
 

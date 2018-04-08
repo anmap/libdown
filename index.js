@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --harmony
 const libdown = require('commander');
 const chalk = require('chalk');
 
@@ -13,8 +13,6 @@ const sequences = require('./sequences/index');
 
 libdown
   .arguments('<url>')
-  .option('-n, --nopdf', 'No PDF generated from downloaded images')
-  .option('-l, --list', 'Show list of supported libraries')
   .action(function(url) {
     const identifedLibrary = identifyLibraryFromURL(url);
     if (identifedLibrary) {
@@ -26,9 +24,12 @@ libdown
         .then(document => {
           document.outputInfo();
           showDisclaimer();
-          document.getPageRange(50,70)
+
+          document.getDocument()
             .start()
-            .then(() => console.log(chalk.green('Operation done!')));
+            .then(() => {
+              document.generatePDF();
+            });
         })
         .catch(err => console.log(chalk.red(err)));
     } else {
