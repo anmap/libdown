@@ -1,7 +1,7 @@
 {
   "name": "libdown",
   "version": "0.0.2",
-  "description": "A Node.js command line tool to download digitalized documents from libraries",
+  "description": "A Node.js command-line tool to download digitalized documents from online libraries",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
