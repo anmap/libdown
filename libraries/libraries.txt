@@ -1,1 +1,2 @@
 BnF|Bibliothèque nationale de France (Gallica)|gallica.bnf.fr
+scribd|scribd|scribd.com
