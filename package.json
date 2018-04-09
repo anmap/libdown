@@ -1,6 +1,6 @@
 {
   "name": "libdown",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Node.js command line tool to download digitalized documents from libraries",
   "main": "index.js",
   "scripts": {
