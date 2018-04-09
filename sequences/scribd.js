@@ -21,15 +21,18 @@ function getInfoSequence(url) {
           return reject(new Error(err.response.error));
         }
         const body = res.text;
+        // Extract document ID
+        const docIdStartPos = body.indexOf('doc_id') + 8;
+        const docIdEndPos = body.indexOf('}', docIdStartPos);
+        const docId = body.substring(docIdStartPos, docIdEndPos);
         // Extract title
-        const ogTitlePos = body.indexOf('og:title');
-        const titleStartPos = ogTitlePos + 19;
+        const titleStartPos = body.indexOf('og:title') + 19;
         const titleEndPos = body.indexOf('"', titleStartPos);
         const title = body.substring(titleStartPos, titleEndPos);
         const document = new Document (
           LIBRARY_CODE,
+          docId,
           title,
-          // decodeURIComponent(body.XitiFragment.parameters.x2),
           // decodeURIComponent(body.XitiFragment.parameters.x3),
           // pages,
           // decodeURIComponent(body.XitiFragment.parameters.x12),
