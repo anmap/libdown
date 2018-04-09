@@ -131,7 +131,7 @@ class Document {
 
   generatePDF(options) {
     try {
-      const fileName = this.title.split('.')[0] + '.pdf';
+      const fileName = `${this.libraryCode}_${this.id}.pdf`;
       console.log(chalk.bold.blue('Output PDF file: ' + fileName));
       console.log(chalk.blue('Generating PDF, please wait...'));
       

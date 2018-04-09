@@ -25,7 +25,7 @@ function getInfoSequence(url) {
         const pages = decodeURIComponent(body.ViewerFragment.contenu.PaginationViewerModel.parameters.nbTotalVues);
         const document = new Document (
           LIBRARY_CODE,
-          documentId,
+          decodeURIComponent(body.XitiFragment.parameters.x1),
           decodeURIComponent(body.XitiFragment.parameters.x2),
           decodeURIComponent(body.XitiFragment.parameters.x3),
           pages,
