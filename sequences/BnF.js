@@ -28,6 +28,8 @@ function getInfoSequence(url) {
           decodeURIComponent(body.XitiFragment.parameters.x1),
           decodeURIComponent(body.XitiFragment.parameters.x2),
           decodeURIComponent(body.XitiFragment.parameters.x3),
+          null,
+          null,
           pages,
           decodeURIComponent(body.XitiFragment.parameters.x12),
           decodeURIComponent(body.XitiFragment.parameters.x4),

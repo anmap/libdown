@@ -17,6 +17,8 @@ class Document {
     id,
     title,
     author,
+    uploader,
+    description,
     pages,
     year,
     type,
@@ -28,6 +30,8 @@ class Document {
     this.id = id;
     this.title = title;
     this.author = author;
+    this.uploader = uploader;
+    this.description = description;
     this.pages = pages;
     this.year = year;
     this.type = type;
@@ -47,6 +51,10 @@ class Document {
       && console.log(chalk.bold.cyan('Title: ') + chalk.bold(this.title));
     this.author
       && console.log(chalk.bold.cyan('Author: ') + this.author);
+    this.uploader
+      && console.log(chalk.bold.cyan('Uploader: ') + this.uploader);
+    this.description
+      && console.log(chalk.bold.cyan('Description: ') + this.description);
     this.pages
       && console.log(chalk.bold.cyan('Pages: ') + this.pages);
     this.year

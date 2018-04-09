@@ -20,6 +20,7 @@ function getInfoSequence(url) {
         if (err) {
           return reject(new Error(err.response.error));
         }
+        
         const body = res.text;
         // Extract document ID
         const docIdStartPos = body.indexOf('doc_id') + 8;
@@ -29,10 +30,23 @@ function getInfoSequence(url) {
         const titleStartPos = body.indexOf('og:title') + 19;
         const titleEndPos = body.indexOf('"', titleStartPos);
         const title = body.substring(titleStartPos, titleEndPos);
+        // Extract uplodaer
+        const uploaderStartPos = body.indexOf('>', body.indexOf('publish_info') + 14) + 1;
+        const uploaderEndPos = body.indexOf('<', uploaderStartPos);
+        const uploader = body.substring(uploaderStartPos, uploaderEndPos);
+        // Extract desscription
+        const descStartPos = body.indexOf('og:description') + 25;
+        const descEndPos = body.indexOf('"', descStartPos);
+        const desc = body.substring(descStartPos, descEndPos);
+
+        // Create document
         const document = new Document (
           LIBRARY_CODE,
           docId,
           title,
+          null,
+          uploader,
+          desc,
           // decodeURIComponent(body.XitiFragment.parameters.x3),
           // pages,
           // decodeURIComponent(body.XitiFragment.parameters.x12),
