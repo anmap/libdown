@@ -39,6 +39,8 @@ function getInfoSequence(url) {
         const descEndPos = body.indexOf('"', descStartPos);
         const desc = body.substring(descStartPos, descEndPos);
 
+        const pageURLs = generatePageURLs(body);
+
         // Create document
         const document = new Document (
           LIBRARY_CODE,
@@ -47,13 +49,12 @@ function getInfoSequence(url) {
           null,
           uploader,
           desc,
-          // decodeURIComponent(body.XitiFragment.parameters.x3),
-          // pages,
-          // decodeURIComponent(body.XitiFragment.parameters.x12),
-          // decodeURIComponent(body.XitiFragment.parameters.x4),
-          // decodeURIComponent(body.XitiFragment.parameters.x5),
-          // decodeURIComponent(body.XitiFragment.parameters.x9),
-          // generatePageURLs(documentId, pages),
+          pageURLs.length,
+          null,
+          null,
+          null,
+          null,
+          pageURLs,
         );
 
         resolve(document);
@@ -61,12 +62,53 @@ function getInfoSequence(url) {
   });
 }
 
-function generatePageURLs(documentId, pages) {
-  const pageURLs = [];
-  for (let i = 0; i < pages; i++) {
-    pageURLs.push(util.format(PAGE_URL, documentId, i + 1));
-  }
-  return pageURLs;
+function generatePageURLs(htmlResponse) {
+  // Extract page info
+  const pages = [];
+  let currentPos = nextPos = 0;
+  while (true) {
+    // Assign nextPos value to currentPos
+    currentPos = nextPos;
+
+    // Define the boundaries to extract info of the current page
+    const currentPageInfoStart = htmlResponse.indexOf('var pageParams', currentPos);
+    const currentPageInfoEnd = htmlResponse.indexOf('var page =', currentPageInfoStart);
+
+    // If the start boundary is not larger than current position, break the loop
+    if (currentPageInfoStart <= currentPos) break;
+
+    // Extract and process the current page URL
+    let pageURL = '';
+    const contentURLPos = htmlResponse.indexOf('contentUrl', currentPageInfoStart);
+    // If the contentUrl position is within the boundaries, proceed to extract the page URL
+    // otherwise trigger special URL retrieval
+    if (contentURLPos < currentPageInfoEnd) {
+      const contentURLStart = htmlResponse.indexOf('"', contentURLPos) + 1;
+      const contentURLEnd = htmlResponse.indexOf('"', contentURLStart) - 1;
+       pageURL = htmlResponse
+        .substring(contentURLStart, contentURLEnd)
+        .replace('pages', 'images')
+        .replace('jsonp', 'jpg');
+    } else {
+      const absimgPos = htmlResponse.indexOf('absimg', currentPos);
+      const imgURLStart = htmlResponse.indexOf('orig=', absimgPos) + 6;
+      const imgURLEnd = htmlResponse.indexOf('"', imgURLStart);
+      pageURL = htmlResponse
+        .substring(imgURLStart, imgURLEnd)
+        .replace('scribd', 'scribdassets');
+    }
+
+    // Give the end boundary to nextPos
+    nextPos = currentPageInfoEnd;
+    
+    // If nextPos is greater than currentPos,
+    // push the result to array
+    if (nextPos > currentPos) {
+      pages.push(pageURL);
+    }
+  };
+
+  return pages;
 }
 
 module.exports = {
