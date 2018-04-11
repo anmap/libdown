@@ -12,7 +12,6 @@ const LIBRARY_CODE = 'BnF';
 const PAGE_URL = 'http://gallica.bnf.fr/iiif/ark:/%s/f%s/full/full/0/native.jpg';
 
 function getInfoSequence(url) {
-  const documentId = url.substr(url.indexOf('ark:/') + 5, 19);
   return new Promise((resolve, reject) => {
     request
       .get(url)
@@ -21,8 +20,14 @@ function getInfoSequence(url) {
         if (err) {
           return reject(new Error(err.response.error));
         }
+
         const body = res.body;
         const pages = decodeURIComponent(body.ViewerFragment.contenu.PaginationViewerModel.parameters.nbTotalVues);
+        
+        const idStartPos = url.indexOf('ark:/') + 5;
+        const idEndPos = url.indexOf('/', idStartPos);
+        const documentURLId = url.substring(idStartPos, idEndPos) + '/' + body.XitiFragment.parameters.x1;
+
         const document = new Document (
           LIBRARY_CODE,
           decodeURIComponent(body.XitiFragment.parameters.x1),
@@ -33,7 +38,7 @@ function getInfoSequence(url) {
           decodeURIComponent(body.XitiFragment.parameters.x4),
           decodeURIComponent(body.XitiFragment.parameters.x5),
           decodeURIComponent(body.XitiFragment.parameters.x9),
-          generatePageURLs(documentId, pages),
+          generatePageURLs(documentURLId, pages),
         );
 
         resolve(document);
@@ -41,10 +46,10 @@ function getInfoSequence(url) {
   });
 }
 
-function generatePageURLs(documentId, pages) {
+function generatePageURLs(documentURLId, pages) {
   const pageURLs = [];
   for (let i = 0; i < pages; i++) {
-    pageURLs.push(util.format(PAGE_URL, documentId, i + 1));
+    pageURLs.push(util.format(PAGE_URL, documentURLId, i + 1));
   }
   return pageURLs;
 }
