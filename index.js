@@ -23,13 +23,13 @@ libdown
       sequence.getInfoSequence(url)
         .then(document => {
           document.outputInfo();
-          // showDisclaimer();
+          showDisclaimer();
 
-          // document.getDocument()
-          //   .start()
-          //   .then(() => {
-          //     document.generatePDF();
-          //   });
+          document.getDocument()
+            .start()
+            .then(() => {
+              document.generatePDF();
+            });
         })
         .catch(err => console.log(chalk.red(err)));
     } else {

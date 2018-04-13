@@ -30,11 +30,11 @@ function getInfoSequence(url) {
         const titleStartPos = body.indexOf('og:title') + 19;
         const titleEndPos = body.indexOf('"', titleStartPos);
         const title = body.substring(titleStartPos, titleEndPos);
-        // Extract uplodaer
+        // Extract uploader
         const uploaderStartPos = body.indexOf('>', body.indexOf('publish_info') + 14) + 1;
         const uploaderEndPos = body.indexOf('<', uploaderStartPos);
         const uploader = body.substring(uploaderStartPos, uploaderEndPos);
-        // Extract desscription
+        // Extract description
         const descStartPos = body.indexOf('og:description') + 25;
         const descEndPos = body.indexOf('"', descStartPos);
         const desc = body.substring(descStartPos, descEndPos);
@@ -84,7 +84,7 @@ function generatePageURLs(htmlResponse) {
     // otherwise trigger special URL retrieval
     if (contentURLPos < currentPageInfoEnd) {
       const contentURLStart = htmlResponse.indexOf('"', contentURLPos) + 1;
-      const contentURLEnd = htmlResponse.indexOf('"', contentURLStart) - 1;
+      const contentURLEnd = htmlResponse.indexOf('"', contentURLStart);
        pageURL = htmlResponse
         .substring(contentURLStart, contentURLEnd)
         .replace('pages', 'images')
